@@ -1,0 +1,15 @@
+{% extends 'base_layout.html' %}
+
+{% block title %}Meu Perfil{% endblock %}
+
+{% block main_content %}
+<h1>Meu Perfil</h1>
+
+{% if request.user.is_authenticated and request.user.eve_profile %}
+  <p>Nome do Personagem: {{ request.user.eve_profile.character_name }}</p>
+  <p><img src="{{ request.user.eve_profile.portrait_url }}" alt="Retrato"></p>
+  <!-- Se tiver outros campos, como corporação, alliance, etc., exiba aqui -->
+{% else %}
+  <p>Não há perfil disponível.</p>
+{% endif %}
+{% endblock %}

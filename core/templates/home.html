@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Home - Deslogada</title>
+
+  <!-- Fonte opcional (exemplo) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;700;900&display=swap" rel="stylesheet">
+
+  <!-- CSS específico para a home -->
+  <link rel="stylesheet" href="{% static 'css/home.css' %}">
+</head>
+<body>
+
+  <!-- Se quiser um cabeçalho simples (sem menu) -->
+  <header class="home-header">
+    <div class="home-header-logo">
+      <!-- Exemplo: Logo pequena -->
+      <img src="{% static 'images/logo.png' %}" alt="Logo" class="home-logo">
+      <h1 class="home-title">Sistema de Encomenda de Naves</h1>
+    </div>
+  </header>
+
+  <!-- Conteúdo principal da home -->
+  <main class="home-container">
+    <h2 class="home-subtitle">Bem-vindo!</h2>
+    <p class="home-text">Bem vindo ao sistema de encomenda de naves da PulaLeeroy BR. Faça login via EVE para acessar o conteúdo.</p>
+    <a href="{% url 'eve_login' %}" class="home-login-btn">Login com EVE</a>
+  </main>
+
+  <!-- Rodapé simples (opcional) -->
+  <footer class="home-footer">
+    <p>© 2025 - PulaLeeroy BR. Todos os direitos reservados.</p>
+  </footer>
+
+</body>
+</html>

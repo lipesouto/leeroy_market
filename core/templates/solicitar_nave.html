@@ -1,0 +1,214 @@
+{% extends 'base_layout.html' %}
+{% load static %}
+
+{% block title %}Solicitar Nave{% endblock %}
+
+{% block main_content %}
+
+<!-- Carregando jQuery e jQuery UI do seu diretório estático -->
+<link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}">
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/jquery-ui.min.js' %}"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+
+<h1>Solicitar Nave</h1>
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+
+<!-- Área para mostrar os detalhes da nave selecionada -->
+<div id="detalhesNave" style="border: 1px solid #ccc; padding: 10px; margin-bottom: 20px;">
+  <strong>Detalhes da Nave:</strong>
+  <p id="infoNave">Nenhuma nave selecionada.</p>
+</div>
+
+<!-- Form de Autocomplete -->
+<form method="POST" style="margin-bottom: 20px;">
+  {% csrf_token %}
+  <input type="hidden" name="ship_id" id="ship_id">
+
+  <label for="ship_search">Buscar Nave:</label>
+  <input type="text" id="ship_search" placeholder="Digite o nome da nave" autocomplete="off">
+  <button type="submit">Solicitar</button>
+</form>
+
+<!-- Menu Tree de Categorias e Naves -->
+<ul class="tree">
+  {% for cat in categories %}
+    <li>
+      <!-- Agrupamos o ícone e o nome da categoria em um só bloco -->
+      <span class="category-header">
+        <!-- Ícone rocket por padrão -->
+        <span class="caret material-symbols-outlined">rocket</span>
+        {{ cat.category_name }}
+      </span>
+
+      <ul class="nested">
+        {% for ship in cat.ships.all %}
+          <li>
+              <button
+                type="button"
+                onclick="selecionarNave('{{ ship.id }}', '{{ ship.ship_name }}', '{{ cat.category_name }}')">
+                {{ ship.ship_name }}
+              </button>
+          </li>
+        {% endfor %}
+      </ul>
+    </li>
+  {% endfor %}
+</ul>
+
+<h2>Seus Pedidos</h2>
+<table style="border-collapse: collapse; width: 100%;">
+    <thead>
+        <tr style="background-color: #f0f0f0;">
+            <th style="text-align: left; padding: 8px;">Nave</th>
+            <th style="text-align: left; padding: 8px;">Status</th>
+            <th style="text-align: left; padding: 8px;">Data Solicitação</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for pedido in pedidos %}
+        <tr>
+            <td style="border-bottom: 1px solid #ccc; padding: 8px;">
+                {{ pedido.nave.ship_name }}
+            </td>
+            <td style="border-bottom: 1px solid #ccc; padding: 8px; color: red;">
+                {{ pedido.status }}
+            </td>
+            <td style="border-bottom: 1px solid #ccc; padding: 8px;">
+                {{ pedido.data_solicitacao|date:"d/m/Y H:i" }}
+            </td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="3" style="padding: 8px;">Você não possui pedidos.</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  var carets = document.querySelectorAll(".category-header .caret");
+
+  carets.forEach(function(icon) {
+    icon.addEventListener("click", function(event) {
+      event.stopPropagation();
+
+      // Identifica o <li> atual e o <ul> .nested interno
+      var parentLi = icon.closest("li");
+      var nestedList = parentLi.querySelector(".nested");
+
+      if (!nestedList) return;
+
+      // Antes de abrir/fechar a atual, fechamos todas as outras
+      closeAllOthers(nestedList);
+
+      // Alterna a classe .caret-down no ícone atual
+      icon.classList.toggle("caret-down");
+
+      // Se estava "rocket", vira "rocket_launch", e vice-versa
+      if (icon.textContent.trim() === "rocket") {
+        icon.textContent = "rocket_launch";
+      } else {
+        icon.textContent = "rocket";
+      }
+
+      // Exibe ou oculta o submenu atual
+      nestedList.classList.toggle("active");
+    });
+  });
+});
+
+/**
+ * Fecha todos os <ul class="nested active"> que não sejam o currentUl
+ * e também reseta o ícone (rocket_launch -> rocket).
+ */
+function closeAllOthers(currentUl) {
+  // Seleciona todos os submenus abertos
+  var allOpen = document.querySelectorAll(".nested.active");
+  allOpen.forEach(function(ul) {
+    // Se não for o submenu clicado
+    if (ul !== currentUl) {
+      // Remove .active para fechar
+      ul.classList.remove("active");
+
+      // Acha o ícone do pai e se estiver "rocket_launch", volta pra "rocket"
+      var liParent = ul.closest("li");
+      if (liParent) {
+        var caret = liParent.querySelector(".caret");
+        if (caret) {
+          // Se o texto estiver rocket_launch, revert
+          if (caret.textContent.trim() === "rocket_launch") {
+            caret.textContent = "rocket";
+          }
+          caret.classList.remove("caret-down");
+        }
+      }
+    }
+  });
+}
+
+// Função chamada ao clicar em uma nave no menu tree
+function selecionarNave(shipId, shipName, category) {
+    // Preenche o input de texto
+    document.getElementById('ship_search').value = shipName;
+
+    // Atualiza o campo oculto para armazenar o ID da nave
+    document.getElementById('ship_id').value = shipId;
+
+    // Exibe os detalhes da nave selecionada
+    document.getElementById('infoNave').innerHTML =
+        "<strong>Categoria:</strong> " + category + "<br>" +
+        "<strong>Nome:</strong> " + shipName;
+}
+</script>
+<!-- Script do Autocomplete -->
+<script>
+  $(function() {
+    $("#ship_search").autocomplete({
+      source: "{% url 'nave_autocomplete' %}",
+      minLength: 2,
+      select: function(event, ui) {
+        // Preenche hidden e input
+        $("#ship_id").val(ui.item.id);
+        $("#ship_search").val(ui.item.label);
+
+        // Exibe categoria e nome
+        mostrarDetalhes(ui.item.category_name, ui.item.label);
+
+        return false;
+      }
+    });
+  });
+
+  function mostrarDetalhes(categoria, nome) {
+    document.getElementById('infoNave').innerHTML =
+      "Categoria: " + categoria + "<br>Nome: " + nome;
+  }
+</script>
+<script>
+  function mostrarDetalhes(categoria, nome) {
+    const infoDiv = document.getElementById('infoNave');
+    infoDiv.innerHTML = "Categoria: " + categoria + "<br>Nome: " + nome;
+  }
+
+  function toggleSubmenu(el) {
+    const subUl = el.nextElementSibling;
+    if (subUl.style.display === 'none') {
+      subUl.style.display = 'block';
+    } else {
+      subUl.style.display = 'none';
+    }
+  }
+</script>
+
+<!-- CSS simples para o "menu tree" -->
+<style>
+  .tree { list-style-type: none; margin: 0; padding: 0; }
+  .toggle { cursor: pointer; color: blue; user-select: none; }
+  .toggle:hover { text-decoration: underline; }
+  .nested { margin-left: 20px; padding-left: 10px; border-left: 1px dotted #ccc; }
+</style>
+
+{% endblock %}

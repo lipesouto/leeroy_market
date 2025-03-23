@@ -1,0 +1,43 @@
+{% extends 'base_layout.html' %}
+{% block title %}Home Logada{% endblock %}
+
+{% block main_content %}
+<h1>Bem-vindo,
+  {% if request.user.is_authenticated and request.user.eve_profile %}
+    {{ request.user.eve_profile.character_name }}
+  {% else %}
+    {{ request.user.username }}
+  {% endif %}
+</h1>
+<p>Página para solicitação de naves!</p>
+
+<h2>Seus Pedidos</h2>
+<table style="border-collapse: collapse; width: 100%;">
+    <thead>
+        <tr style="background-color: #f0f0f0;">
+            <th style="text-align: left; padding: 8px;">Nave</th>
+            <th style="text-align: left; padding: 8px;">Status</th>
+            <th style="text-align: left; padding: 8px;">Data Solicitação</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for pedido in pedidos %}
+        <tr>
+            <td style="border-bottom: 1px solid #ccc; padding: 8px;">
+                {{ pedido.nave.ship_name }}
+            </td>
+            <td style="border-bottom: 1px solid #ccc; padding: 8px; color: red;">
+                {{ pedido.status }}
+            </td>
+            <td style="border-bottom: 1px solid #ccc; padding: 8px;">
+                {{ pedido.data_solicitacao|date:"d/m/Y H:i" }}
+            </td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="3" style="padding: 8px;">Você não possui pedidos.</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
