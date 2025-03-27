@@ -1,1 +1,1 @@
-web: gunicorn leeroy_market.wsgi --log-file -
+web: gunicorn eve_mkt.wsgi --log-file -
