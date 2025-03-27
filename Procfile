@@ -1,1 +1,1 @@
-web: manage.py runserver 3000
+web: gunicorn leeroy_market.wsgi --log-file -
