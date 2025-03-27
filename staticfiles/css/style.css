@@ -1,0 +1,86 @@
+.tree {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tree li {
+  margin: 4px 0;
+}
+
+/* .category-header para agrupar ícone e texto */
+.category-header {
+  cursor: pointer;
+  display: inline-block;
+  margin-bottom: -5px;
+  font-weight: bold;     /* Deixa o texto em negrito */
+  font-size: 16px;       /* Define o tamanho da fonte como 10px (ou 10pt) */
+}
+
+/* A classe .caret é aplicada ao ícone */
+.caret {
+  font-family: 'Material Symbols Outlined';
+  font-size: 24px;
+  vertical-align: middle;
+  margin-right: 6px;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+/* Quando adicionamos .caret-down, pode aplicar um efeito */
+.caret-down {
+  /* Exemplo: um leve giro */
+  transform: rotate(10deg);
+}
+
+/* .nested começa oculta */
+.nested {
+  display: none;
+  margin-left: 20px;
+  padding-left: 10px;
+  border-left: 1px dotted #ccc;
+}
+
+/* .active exibe o submenu */
+.active {
+  display: block;
+}
+
+/* core/static/css/style.css */
+body {
+  font-family: 'Barlow', sans-serif;
+}
+
+/* Caso queira usar variações de peso */
+h1, h2, h3 {
+  font-weight: 700;  /* Exemplo de uso do peso 700 */
+}
+p {
+  font-weight: 300;  /* Exemplo de uso do peso 300 */
+}
+
+ .container {
+    display: flex;
+    min-height: 100vh;
+}
+nav {
+    width: 200px;
+    background: #f0f0f0;
+    padding: 20px;
+}
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+nav li {
+    margin-bottom: 10px;
+}
+nav a {
+    text-decoration: none;
+    color: #333;
+}
+.content {
+    flex: 1;
+    padding: 20px;
+}

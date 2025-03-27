@@ -1,0 +1,84 @@
+/* home.css */
+
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Corpo */
+body {
+  font-family: 'Barlow', sans-serif;
+  background: linear-gradient(90deg, #0c0f17 0%, #0e121a 50%, #131926 100%);
+  color: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Cabeçalho da home */
+.home-header {
+  background-color: transparent; /* ou outra cor se preferir */
+  padding: 1rem 2rem;
+  text-align: center;
+}
+.home-header-logo {
+  display: inline-block;
+}
+.home-logo {
+  width: 100px; /* tamanho da imagem */
+  margin-bottom: 0.5rem;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+.home-title {
+  font-size: 1.5rem;
+  font-weight: 900;
+  margin-top: 0.5rem;
+}
+
+/* Conteúdo principal */
+.home-container {
+  flex: 1; /* ocupa o espaço disponível */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+}
+.home-subtitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+.home-text {
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  color: #cccccc;
+  max-width: 600px;
+}
+.home-login-btn {
+  display: inline-block;
+  background-color: #00b4d8;
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 700;
+  transition: background-color 0.2s ease;
+}
+.home-login-btn:hover {
+  background-color: #0090ad;
+}
+
+/* Rodapé da home */
+.home-footer {
+  background-color: transparent;
+  color: #999999;
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.875rem;
+}
