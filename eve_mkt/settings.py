@@ -78,10 +78,10 @@ WSGI_APPLICATION = 'eve_mkt.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'eve_online',
-        'USER': 'eve_user',
-        'PASSWORD': 'eve_password',
-        'HOST': 'localhost',
+        'NAME': 'df3liscfasg3o0',
+        'USER': 'u92kjk7obnuuo',
+        'PASSWORD': 'pa5e47d80ddf71c13a3f89b031a5a29c4e656a90db881dcc0ea0e72b87ed7a0df',
+        'HOST': 'c6sfjnr30ch74e.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',
         'PORT': '5432',
     }
 }
@@ -130,4 +130,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EVE_CLIENT_ID = '995968f151a54fc5b0870da6c0ddb455'
 EVE_CLIENT_SECRET = 'lkrKmQEiYwFlLhc87aZLhshaoGj9mPnkhY82my6Z'
-EVE_REDIRECT_URI = 'http://127.0.0.1:3000/eve-callback/'
+EVE_REDIRECT_URI = 'https://leeroy-market-9e6b5666aca1.herokuapp.com/eve-callback/'
