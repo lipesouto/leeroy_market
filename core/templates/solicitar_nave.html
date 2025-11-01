@@ -148,20 +148,47 @@
 
 /* Form Control Dark Theme */
 .form-control, .form-select {
-    background: rgba(26, 31, 46, 0.6);
-    border-color: rgba(0, 180, 216, 0.3);
-    color: #e0e0e0;
+    background: rgba(26, 31, 46, 0.6) !important;
+    border-color: rgba(0, 180, 216, 0.3) !important;
+    color: #e0e0e0 !important;
 }
 
 .form-control:focus, .form-select:focus {
-    background: rgba(26, 31, 46, 0.8);
-    border-color: #00b4d8;
-    color: #e0e0e0;
-    box-shadow: 0 0 0 0.25rem rgba(0, 180, 216, 0.25);
+    background: rgba(26, 31, 46, 0.8) !important;
+    border-color: #00b4d8 !important;
+    color: #e0e0e0 !important;
+    box-shadow: 0 0 0 0.25rem rgba(0, 180, 216, 0.25) !important;
 }
 
 .form-control::placeholder {
-    color: #7a8491;
+    color: #7a8491 !important;
+}
+
+/* Text overrides for visibility */
+.card-body p,
+.card-body span,
+.card-body div,
+.list-group-item,
+.form-text {
+    color: #e0e0e0 !important;
+}
+
+.list-group-item {
+    color: #e0e0e0 !important;
+}
+
+.list-group-item h6,
+.list-group-item p,
+.list-group-item small {
+    color: #e0e0e0 !important;
+}
+
+.list-group-item .text-muted {
+    color: #b0b8c4 !important;
+}
+
+.card-footer {
+    color: #b0b8c4 !important;
 }
 </style>
 {% endblock %}

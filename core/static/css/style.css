@@ -49,14 +49,90 @@
 /* core/static/css/style.css */
 body {
   font-family: 'Barlow', sans-serif;
+  color: #e0e0e0;
+  background: #0c0f17;
 }
 
 /* Caso queira usar variações de peso */
-h1, h2, h3 {
+h1, h2, h3, h4, h5, h6 {
   font-weight: 700;  /* Exemplo de uso do peso 700 */
+  color: #fff;
 }
+
 p {
   font-weight: 300;  /* Exemplo de uso do peso 300 */
+  color: #e0e0e0;
+}
+
+/* Garantir contraste em todo o site */
+* {
+  color: #e0e0e0;
+}
+
+/* Títulos sempre brancos */
+h1, h2, h3, h4, h5, h6 {
+  color: #fff !important;
+}
+
+/* Texto normal claro */
+p, span, div, td, th, li {
+  color: #e0e0e0 !important;
+}
+
+/* Labels e small text */
+label, small, .small {
+  color: #b0b8c4 !important;
+}
+
+/* Links */
+a {
+  color: #00b4d8 !important;
+}
+
+a:hover {
+  color: #48cae4 !important;
+}
+
+/* Texto muted mais claro */
+.text-muted {
+  color: #b0b8c4 !important;
+}
+
+/* Badges sempre com texto branco */
+.badge {
+  color: #fff !important;
+}
+
+/* Formulários */
+.form-control,
+.form-select,
+input,
+textarea,
+select {
+  background: rgba(26, 31, 46, 0.6) !important;
+  border-color: rgba(0, 180, 216, 0.3) !important;
+  color: #e0e0e0 !important;
+}
+
+.form-control:focus,
+.form-select:focus,
+input:focus,
+textarea:focus,
+select:focus {
+  background: rgba(26, 31, 46, 0.8) !important;
+  border-color: #00b4d8 !important;
+  color: #e0e0e0 !important;
+}
+
+/* Placeholders */
+::placeholder {
+  color: #7a8491 !important;
+  opacity: 1;
+}
+
+/* Botões */
+.btn {
+  color: #fff !important;
 }
 
  .container {

@@ -112,22 +112,64 @@
         }
         
         .table {
-            color: #e0e0e0;
+            color: #e0e0e0 !important;
         }
         
         .table thead th {
             border-color: rgba(0, 180, 216, 0.3);
             background: rgba(0, 180, 216, 0.1);
-            color: #00b4d8;
+            color: #00b4d8 !important;
             font-weight: 600;
         }
         
         .table tbody td {
             border-color: rgba(255, 255, 255, 0.1);
+            color: #e0e0e0 !important;
         }
         
         .table-hover tbody tr:hover {
             background: rgba(0, 180, 216, 0.05);
+        }
+        
+        /* Forçar cores claras em todos os elementos de texto */
+        .card-body,
+        .card-text,
+        .form-label,
+        .form-control,
+        .form-select,
+        p,
+        span,
+        div {
+            color: #e0e0e0;
+        }
+        
+        /* Links */
+        a {
+            color: #00b4d8;
+        }
+        
+        a:hover {
+            color: #48cae4;
+        }
+        
+        /* Badges claros */
+        .badge {
+            color: #fff !important;
+        }
+        
+        /* Text muted mais claro */
+        .text-muted {
+            color: #b0b8c4 !important;
+        }
+        
+        /* Small text */
+        small {
+            color: #b0b8c4 !important;
+        }
+        
+        /* Labels de formulário */
+        label {
+            color: #e0e0e0 !important;
         }
         
         .btn-primary {
