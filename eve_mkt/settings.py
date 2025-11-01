@@ -137,4 +137,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EVE_CLIENT_ID = '995968f151a54fc5b0870da6c0ddb455'
 EVE_CLIENT_SECRET = 'lkrKmQEiYwFlLhc87aZLhshaoGj9mPnkhY82my6Z'
-EVE_REDIRECT_URI = 'https://leeroy-market-9e6b5666aca1.herokuapp.com/eve-callback/'
+EVE_REDIRECT_URI = 'https://www.pulaleeroybrasil.com.br/eve-callback/'
