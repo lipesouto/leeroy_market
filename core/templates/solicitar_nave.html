@@ -3,212 +3,467 @@
 
 {% block title %}Solicitar Nave{% endblock %}
 
-{% block main_content %}
-
-<!-- Carregando jQuery e jQuery UI do seu diretório estático -->
+{% block extra_css %}
+<!-- jQuery UI CSS -->
 <link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}">
-<script src="{% static 'js/jquery.min.js' %}"></script>
-<script src="{% static 'js/jquery-ui.min.js' %}"></script>
+<!-- Material Symbols -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
 
-<h1>Solicitar Nave</h1>
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<style>
+/* Tree Menu Styles */
+.tree-container {
+    background: rgba(26, 31, 46, 0.8);
+    border: 1px solid rgba(0, 180, 216, 0.2);
+    border-radius: 10px;
+    padding: 1.5rem;
+    max-height: 500px;
+    overflow-y: auto;
+}
 
+.tree {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
 
-<!-- Área para mostrar os detalhes da nave selecionada -->
-<div id="detalhesNave" style="border: 1px solid #ccc; padding: 10px; margin-bottom: 20px;">
-  <strong>Detalhes da Nave:</strong>
-  <p id="infoNave">Nenhuma nave selecionada.</p>
+.tree li {
+    margin: 0.5rem 0;
+}
+
+.category-header {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: rgba(0, 180, 216, 0.1);
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.category-header:hover {
+    background: rgba(0, 180, 216, 0.2);
+    border-color: rgba(0, 180, 216, 0.4);
+}
+
+.caret {
+    font-family: 'Material Symbols Outlined';
+    font-size: 24px;
+    margin-right: 0.75rem;
+    transition: transform 0.3s ease;
+    color: #00b4d8;
+}
+
+.caret-down {
+    transform: rotate(90deg);
+}
+
+.nested {
+    display: none;
+    margin-left: 2rem;
+    padding-left: 1rem;
+    border-left: 2px solid rgba(0, 180, 216, 0.3);
+    margin-top: 0.5rem;
+}
+
+.nested.active {
+    display: block;
+}
+
+.nested li button {
+    width: 100%;
+    text-align: left;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #b0b8c4;
+    border-radius: 5px;
+    transition: all 0.2s ease;
+    margin-bottom: 0.25rem;
+}
+
+.nested li button:hover {
+    background: rgba(0, 180, 216, 0.2);
+    border-color: #00b4d8;
+    color: #00b4d8;
+    transform: translateX(5px);
+}
+
+/* Ship Details Card */
+.ship-details-card {
+    background: linear-gradient(135deg, rgba(0, 180, 216, 0.1) 0%, rgba(0, 144, 173, 0.05) 100%);
+    border: 2px solid rgba(0, 180, 216, 0.3);
+    border-radius: 10px;
+    padding: 1.5rem;
+}
+
+/* Autocomplete customization */
+.ui-autocomplete {
+    background: rgba(26, 31, 46, 0.98) !important;
+    border: 1px solid rgba(0, 180, 216, 0.3) !important;
+    border-radius: 8px !important;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.ui-menu-item {
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ui-menu-item:last-child {
+    border-bottom: none;
+}
+
+.ui-menu-item-wrapper {
+    color: #e0e0e0 !important;
+    padding: 0.5rem !important;
+}
+
+.ui-state-active {
+    background: rgba(0, 180, 216, 0.2) !important;
+    border: none !important;
+    color: #00b4d8 !important;
+}
+
+/* Custom scrollbar for tree */
+.tree-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.tree-container::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
+.tree-container::-webkit-scrollbar-thumb {
+    background: rgba(0, 180, 216, 0.5);
+    border-radius: 4px;
+}
+
+.tree-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 180, 216, 0.7);
+}
+
+/* Form Control Dark Theme */
+.form-control, .form-select {
+    background: rgba(26, 31, 46, 0.6);
+    border-color: rgba(0, 180, 216, 0.3);
+    color: #e0e0e0;
+}
+
+.form-control:focus, .form-select:focus {
+    background: rgba(26, 31, 46, 0.8);
+    border-color: #00b4d8;
+    color: #e0e0e0;
+    box-shadow: 0 0 0 0.25rem rgba(0, 180, 216, 0.25);
+}
+
+.form-control::placeholder {
+    color: #7a8491;
+}
+</style>
+{% endblock %}
+
+{% block main_content %}
+<div class="page-header">
+    <h1>
+        <i class="bi bi-bag-plus me-2"></i>
+        Solicitar Nave
+    </h1>
+    <p class="mb-0 mt-2" style="color: #b0b8c4;">Selecione a nave desejada usando o menu ou busca rápida</p>
 </div>
 
-<!-- Form de Autocomplete -->
-<form method="POST" style="margin-bottom: 20px;">
-  {% csrf_token %}
-  <input type="hidden" name="ship_id" id="ship_id">
+<div class="row">
+    <!-- Left Column: Ship Selection -->
+    <div class="col-lg-8 mb-4">
+        <!-- Ship Details Preview -->
+        <div class="card mb-4 ship-details-card">
+            <div class="card-body">
+                <h5 class="mb-3">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Detalhes da Nave Selecionada
+                </h5>
+                <div id="infoNave">
+                    <div class="text-center text-muted py-3">
+                        <i class="bi bi-rocket-takeoff fs-1 d-block mb-2" style="opacity: 0.3;"></i>
+                        <p class="mb-0">Nenhuma nave selecionada. Use o menu abaixo ou a busca rápida.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-  <label for="ship_search">Buscar Nave:</label>
-  <input type="text" id="ship_search" placeholder="Digite o nome da nave" autocomplete="off">
-  <button type="submit">Solicitar</button>
-</form>
+        <!-- Search Form -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-search me-2"></i>
+                    Busca Rápida
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" id="shipForm">
+                    {% csrf_token %}
+                    <input type="hidden" name="ship_id" id="ship_id">
+                    
+                    <div class="row g-3">
+                        <div class="col-md-9">
+                            <label for="ship_search" class="form-label">
+                                <i class="bi bi-rocket me-1"></i>
+                                Digite o nome da nave
+                            </label>
+                            <input type="text" 
+                                   class="form-control form-control-lg" 
+                                   id="ship_search" 
+                                   placeholder="Ex: Raven, Drake, Hurricane..." 
+                                   autocomplete="off">
+                            <div class="form-text">Digite pelo menos 2 caracteres para buscar</div>
+                        </div>
+                        <div class="col-md-3 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                <i class="bi bi-send me-2"></i>
+                                Solicitar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
 
-<!-- Menu Tree de Categorias e Naves -->
-<ul class="tree">
-  {% for cat in categories %}
-    <li>
-      <!-- Agrupamos o ícone e o nome da categoria em um só bloco -->
-      <span class="category-header">
-        <!-- Ícone rocket por padrão -->
-        <span class="caret material-symbols-outlined">rocket</span>
-        {{ cat.category_name }}
-      </span>
+        <!-- Tree Menu -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-diagram-3 me-2"></i>
+                    Navegação por Categoria
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="tree-container">
+                    <ul class="tree">
+                        {% for cat in categories %}
+                        <li>
+                            <span class="category-header">
+                                <span class="caret material-symbols-outlined">rocket</span>
+                                <span>{{ cat.category_name }}</span>
+                                <span class="badge bg-primary ms-auto">{{ cat.ships.all|length }}</span>
+                            </span>
+                            
+                            <ul class="nested">
+                                {% for ship in cat.ships.all %}
+                                <li>
+                                    <button type="button"
+                                            onclick="selecionarNave('{{ ship.id }}', '{{ ship.ship_name }}', '{{ cat.category_name }}')">
+                                        <i class="bi bi-chevron-right me-2"></i>
+                                        {{ ship.ship_name }}
+                                    </button>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 
-      <ul class="nested">
-        {% for ship in cat.ships.all %}
-          <li>
-              <button
-                type="button"
-                onclick="selecionarNave('{{ ship.id }}', '{{ ship.ship_name }}', '{{ cat.category_name }}')">
-                {{ ship.ship_name }}
-              </button>
-          </li>
-        {% endfor %}
-      </ul>
-    </li>
-  {% endfor %}
-</ul>
+    <!-- Right Column: My Orders -->
+    <div class="col-lg-4">
+        <div class="card sticky-top" style="top: 2rem;">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-list-ul me-2"></i>
+                    Meus Pedidos Recentes
+                </h5>
+            </div>
+            <div class="card-body p-0" style="max-height: 600px; overflow-y: auto;">
+                {% if pedidos %}
+                    <div class="list-group list-group-flush">
+                        {% for pedido in pedidos|slice:":10" %}
+                        <div class="list-group-item" style="background: transparent; border-color: rgba(255, 255, 255, 0.1);">
+                            <div class="d-flex w-100 justify-content-between align-items-start mb-2">
+                                <h6 class="mb-1" style="color: #00b4d8;">
+                                    <i class="bi bi-rocket me-1"></i>
+                                    {{ pedido.nave.ship_name }}
+                                </h6>
+                                {% if pedido.status == "Pendente" %}
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="bi bi-clock me-1"></i>
+                                        Pendente
+                                    </span>
+                                {% elif pedido.status == "Aprovado" %}
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-check me-1"></i>
+                                        Aprovado
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-secondary">{{ pedido.status }}</span>
+                                {% endif %}
+                            </div>
+                            <p class="mb-1 small text-muted">
+                                <i class="bi bi-tag me-1"></i>
+                                {{ pedido.nave.category.category_name }}
+                            </p>
+                            <small class="text-muted">
+                                <i class="bi bi-calendar me-1"></i>
+                                {{ pedido.data_solicitacao|date:"d/m/Y H:i" }}
+                            </small>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-inbox fs-1 text-muted d-block mb-3"></i>
+                        <p class="text-muted mb-0">Nenhum pedido ainda</p>
+                    </div>
+                {% endif %}
+            </div>
+            {% if pedidos %}
+            <div class="card-footer text-center">
+                <a href="{% url 'home_logada' %}" class="btn btn-sm btn-outline-secondary">
+                    <i class="bi bi-eye me-1"></i>
+                    Ver Todos
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
 
-<h2>Seus Pedidos</h2>
-<table style="border-collapse: collapse; width: 100%;">
-    <thead>
-        <tr style="background-color: #f0f0f0;">
-            <th style="text-align: left; padding: 8px;">Nave</th>
-            <th style="text-align: left; padding: 8px;">Status</th>
-            <th style="text-align: left; padding: 8px;">Data Solicitação</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for pedido in pedidos %}
-        <tr>
-            <td style="border-bottom: 1px solid #ccc; padding: 8px;">
-                {{ pedido.nave.ship_name }}
-            </td>
-            <td style="border-bottom: 1px solid #ccc; padding: 8px; color: red;">
-                {{ pedido.status }}
-            </td>
-            <td style="border-bottom: 1px solid #ccc; padding: 8px;">
-                {{ pedido.data_solicitacao|date:"d/m/Y H:i" }}
-            </td>
-        </tr>
-    {% empty %}
-        <tr>
-            <td colspan="3" style="padding: 8px;">Você não possui pedidos.</td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
+{% endblock %}
+
+{% block extra_js %}
+<!-- jQuery and jQuery UI -->
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/jquery-ui.min.js' %}"></script>
 
 <script>
+// Tree Menu Toggle
 document.addEventListener("DOMContentLoaded", function() {
-  var carets = document.querySelectorAll(".category-header .caret");
-
-  carets.forEach(function(icon) {
-    icon.addEventListener("click", function(event) {
-      event.stopPropagation();
-
-      // Identifica o <li> atual e o <ul> .nested interno
-      var parentLi = icon.closest("li");
-      var nestedList = parentLi.querySelector(".nested");
-
-      if (!nestedList) return;
-
-      // Antes de abrir/fechar a atual, fechamos todas as outras
-      closeAllOthers(nestedList);
-
-      // Alterna a classe .caret-down no ícone atual
-      icon.classList.toggle("caret-down");
-
-      // Se estava "rocket", vira "rocket_launch", e vice-versa
-      if (icon.textContent.trim() === "rocket") {
-        icon.textContent = "rocket_launch";
-      } else {
-        icon.textContent = "rocket";
-      }
-
-      // Exibe ou oculta o submenu atual
-      nestedList.classList.toggle("active");
+    const carets = document.querySelectorAll(".category-header .caret");
+    
+    carets.forEach(function(icon) {
+        icon.parentElement.addEventListener("click", function(event) {
+            event.stopPropagation();
+            
+            const parentLi = this.closest("li");
+            const nestedList = parentLi.querySelector(".nested");
+            
+            if (!nestedList) return;
+            
+            // Close all others
+            closeAllOthers(nestedList);
+            
+            // Toggle current
+            icon.classList.toggle("caret-down");
+            
+            if (icon.textContent.trim() === "rocket") {
+                icon.textContent = "rocket_launch";
+            } else {
+                icon.textContent = "rocket";
+            }
+            
+            nestedList.classList.toggle("active");
+        });
     });
-  });
 });
 
-/**
- * Fecha todos os <ul class="nested active"> que não sejam o currentUl
- * e também reseta o ícone (rocket_launch -> rocket).
- */
 function closeAllOthers(currentUl) {
-  // Seleciona todos os submenus abertos
-  var allOpen = document.querySelectorAll(".nested.active");
-  allOpen.forEach(function(ul) {
-    // Se não for o submenu clicado
-    if (ul !== currentUl) {
-      // Remove .active para fechar
-      ul.classList.remove("active");
-
-      // Acha o ícone do pai e se estiver "rocket_launch", volta pra "rocket"
-      var liParent = ul.closest("li");
-      if (liParent) {
-        var caret = liParent.querySelector(".caret");
-        if (caret) {
-          // Se o texto estiver rocket_launch, revert
-          if (caret.textContent.trim() === "rocket_launch") {
-            caret.textContent = "rocket";
-          }
-          caret.classList.remove("caret-down");
+    const allOpen = document.querySelectorAll(".nested.active");
+    allOpen.forEach(function(ul) {
+        if (ul !== currentUl) {
+            ul.classList.remove("active");
+            
+            const liParent = ul.closest("li");
+            if (liParent) {
+                const caret = liParent.querySelector(".caret");
+                if (caret && caret.textContent.trim() === "rocket_launch") {
+                    caret.textContent = "rocket";
+                    caret.classList.remove("caret-down");
+                }
+            }
         }
-      }
-    }
-  });
-}
-
-// Função chamada ao clicar em uma nave no menu tree
-function selecionarNave(shipId, shipName, category) {
-    // Preenche o input de texto
-    document.getElementById('ship_search').value = shipName;
-
-    // Atualiza o campo oculto para armazenar o ID da nave
-    document.getElementById('ship_id').value = shipId;
-
-    // Exibe os detalhes da nave selecionada
-    document.getElementById('infoNave').innerHTML =
-        "<strong>Categoria:</strong> " + category + "<br>" +
-        "<strong>Nome:</strong> " + shipName;
-}
-</script>
-<!-- Script do Autocomplete -->
-<script>
-  $(function() {
-    $("#ship_search").autocomplete({
-      source: "{% url 'nave_autocomplete' %}",
-      minLength: 2,
-      select: function(event, ui) {
-        // Preenche hidden e input
-        $("#ship_id").val(ui.item.id);
-        $("#ship_search").val(ui.item.label);
-
-        // Exibe categoria e nome
-        mostrarDetalhes(ui.item.category_name, ui.item.label);
-
-        return false;
-      }
     });
-  });
+}
 
-  function mostrarDetalhes(categoria, nome) {
-    document.getElementById('infoNave').innerHTML =
-      "Categoria: " + categoria + "<br>Nome: " + nome;
-  }
-</script>
-<script>
-  function mostrarDetalhes(categoria, nome) {
-    const infoDiv = document.getElementById('infoNave');
-    infoDiv.innerHTML = "Categoria: " + categoria + "<br>Nome: " + nome;
-  }
+// Select ship from tree
+function selecionarNave(shipId, shipName, category) {
+    document.getElementById('ship_search').value = shipName;
+    document.getElementById('ship_id').value = shipId;
+    
+    document.getElementById('infoNave').innerHTML = `
+        <div class="row g-3">
+            <div class="col-12">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-rocket-takeoff fs-1 text-primary me-3"></i>
+                    <div>
+                        <h5 class="mb-1" style="color: #00b4d8;">${shipName}</h5>
+                        <p class="mb-0 text-muted">
+                            <i class="bi bi-tag me-1"></i>
+                            Categoria: ${category}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="alert alert-success mb-0" role="alert">
+                    <i class="bi bi-check-circle me-2"></i>
+                    Nave selecionada! Clique em <strong>Solicitar</strong> para confirmar.
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
-  function toggleSubmenu(el) {
-    const subUl = el.nextElementSibling;
-    if (subUl.style.display === 'none') {
-      subUl.style.display = 'block';
-    } else {
-      subUl.style.display = 'none';
+// jQuery Autocomplete
+$(function() {
+    $("#ship_search").autocomplete({
+        source: "{% url 'nave_autocomplete' %}",
+        minLength: 2,
+        select: function(event, ui) {
+            $("#ship_id").val(ui.item.id);
+            $("#ship_search").val(ui.item.label);
+            
+            document.getElementById('infoNave').innerHTML = `
+                <div class="row g-3">
+                    <div class="col-12">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-rocket-takeoff fs-1 text-primary me-3"></i>
+                            <div>
+                                <h5 class="mb-1" style="color: #00b4d8;">${ui.item.label}</h5>
+                                <p class="mb-0 text-muted">
+                                    <i class="bi bi-tag me-1"></i>
+                                    Categoria: ${ui.item.category_name}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="alert alert-success mb-0" role="alert">
+                            <i class="bi bi-check-circle me-2"></i>
+                            Nave selecionada! Clique em <strong>Solicitar</strong> para confirmar.
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            return false;
+        }
+    });
+});
+
+// Form validation
+document.getElementById('shipForm').addEventListener('submit', function(e) {
+    const shipId = document.getElementById('ship_id').value;
+    if (!shipId) {
+        e.preventDefault();
+        alert('Por favor, selecione uma nave antes de solicitar.');
     }
-  }
+});
 </script>
-
-<!-- CSS simples para o "menu tree" -->
-<style>
-  .tree { list-style-type: none; margin: 0; padding: 0; }
-  .toggle { cursor: pointer; color: blue; user-select: none; }
-  .toggle:hover { text-decoration: underline; }
-  .nested { margin-left: 20px; padding-left: 10px; border-left: 1px dotted #ccc; }
-</style>
-
 {% endblock %}

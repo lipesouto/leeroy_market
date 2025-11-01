@@ -1,40 +1,251 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Home - Deslogada</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Home - EVE Market</title>
 
-  <!-- Fonte opcional (exemplo) -->
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  
+  <!-- Google Fonts - Barlow -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;700;900&display=swap" rel="stylesheet">
 
-  <!-- CSS específico para a home -->
-  <link rel="stylesheet" href="{% static 'css/home.css' %}">
+  <style>
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: linear-gradient(135deg, #0c0f17 0%, #0e121a 50%, #131926 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      color: #ffffff;
+    }
+    
+    .navbar {
+      background: rgba(26, 31, 46, 0.95) !important;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+    
+    .navbar-brand {
+      color: #00b4d8 !important;
+      font-weight: 700;
+      font-size: 1.5rem;
+    }
+    
+    .hero-section {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(0, 180, 216, 0.1) 0%, transparent 70%);
+      border-radius: 50%;
+      top: -250px;
+      right: -250px;
+      animation: pulse 4s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+    }
+    
+    .hero-content {
+      text-align: center;
+      max-width: 700px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .hero-icon {
+      font-size: 5rem;
+      color: #00b4d8;
+      margin-bottom: 1.5rem;
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+    
+    .hero-title {
+      font-size: 3rem;
+      font-weight: 900;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #00b4d8 0%, #0090ad 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .hero-subtitle {
+      font-size: 1.25rem;
+      color: #b0b8c4;
+      margin-bottom: 2.5rem;
+      font-weight: 400;
+    }
+    
+    .btn-login {
+      background: linear-gradient(135deg, #00b4d8 0%, #0090ad 100%);
+      border: none;
+      color: #fff;
+      padding: 1rem 2.5rem;
+      font-size: 1.125rem;
+      font-weight: 700;
+      border-radius: 50px;
+      box-shadow: 0 8px 20px rgba(0, 180, 216, 0.3);
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .btn-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(0, 180, 216, 0.5);
+      color: #fff;
+    }
+    
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+      padding: 0 1rem;
+    }
+    
+    .feature-card {
+      background: rgba(26, 31, 46, 0.6);
+      border: 1px solid rgba(0, 180, 216, 0.2);
+      border-radius: 15px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-5px);
+      border-color: #00b4d8;
+      box-shadow: 0 8px 20px rgba(0, 180, 216, 0.2);
+    }
+    
+    .feature-icon {
+      font-size: 2.5rem;
+      color: #00b4d8;
+      margin-bottom: 1rem;
+    }
+    
+    .feature-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #fff;
+    }
+    
+    .feature-text {
+      color: #b0b8c4;
+      font-size: 0.9rem;
+    }
+    
+    footer {
+      background: rgba(26, 31, 46, 0.95);
+      padding: 1.5rem;
+      text-align: center;
+      color: #7a8491;
+      border-top: 1px solid rgba(0, 180, 216, 0.2);
+      margin-top: auto;
+    }
+    
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2rem;
+      }
+      
+      .hero-subtitle {
+        font-size: 1rem;
+      }
+      
+      .features {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
-
-  <!-- Se quiser um cabeçalho simples (sem menu) -->
-  <header class="home-header">
-    <div class="home-header-logo">
-      <!-- Exemplo: Logo pequena -->
-      <img src="{% static 'images/logo.png' %}" alt="Logo" class="home-logo">
-      <h1 class="home-title">Sistema de Encomenda de Naves</h1>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <i class="bi bi-rocket-takeoff me-2"></i>
+        EVE Market
+      </a>
     </div>
-  </header>
+  </nav>
 
-  <!-- Conteúdo principal da home -->
-  <main class="home-container">
-    <h2 class="home-subtitle">Bem-vindo!</h2>
-    <p class="home-text">Bem vindo ao sistema de encomenda de naves da PulaLeeroy BR. Faça login via EVE para acessar o conteúdo.</p>
-    <a href="{% url 'eve_login' %}" class="home-login-btn">Login com EVE</a>
-  </main>
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <i class="bi bi-rocket-takeoff-fill hero-icon"></i>
+      <h1 class="hero-title">Sistema de Encomenda de Naves</h1>
+      <p class="hero-subtitle">
+        Bem-vindo ao sistema oficial de encomenda de naves da PulaLeeroy BR. 
+        Autentique-se com sua conta EVE Online para começar.
+      </p>
+      <a href="{% url 'eve_login' %}" class="btn-login">
+        <i class="bi bi-box-arrow-in-right"></i>
+        Login com EVE Online
+      </a>
+      
+      <!-- Features -->
+      <div class="features">
+        <div class="feature-card">
+          <i class="bi bi-shield-check feature-icon"></i>
+          <h3 class="feature-title">Seguro</h3>
+          <p class="feature-text">Autenticação OAuth2 via EVE Online</p>
+        </div>
+        
+        <div class="feature-card">
+          <i class="bi bi-lightning-charge feature-icon"></i>
+          <h3 class="feature-title">Rápido</h3>
+          <p class="feature-text">Solicite naves em poucos cliques</p>
+        </div>
+        
+        <div class="feature-card">
+          <i class="bi bi-bell feature-icon"></i>
+          <h3 class="feature-title">Notificações</h3>
+          <p class="feature-text">Receba e-mails in-game automaticamente</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <!-- Rodapé simples (opcional) -->
-  <footer class="home-footer">
-    <p>© 2025 - PulaLeeroy BR. Todos os direitos reservados.</p>
+  <!-- Footer -->
+  <footer>
+    <p class="mb-0">
+      <i class="bi bi-c-circle me-1"></i>
+      2025 PulaLeeroy BR - Todos os direitos reservados
+    </p>
   </footer>
 
+  <!-- Bootstrap 5 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

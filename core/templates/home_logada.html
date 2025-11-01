@@ -1,43 +1,190 @@
 {% extends 'base_layout.html' %}
-{% block title %}Home Logada{% endblock %}
+{% block title %}Dashboard{% endblock %}
 
 {% block main_content %}
-<h1>Bem-vindo,
-  {% if request.user.is_authenticated and request.user.eve_profile %}
-    {{ request.user.eve_profile.character_name }}
-  {% else %}
-    {{ request.user.username }}
-  {% endif %}
-</h1>
-<p>Página para solicitação de naves!</p>
+<div class="page-header">
+    <h1>
+        <i class="bi bi-house-door me-2"></i>
+        Bem-vindo, 
+        {% if request.user.is_authenticated and request.user.eve_profile %}
+            {{ request.user.eve_profile.character_name }}
+        {% else %}
+            {{ request.user.username }}
+        {% endif %}!
+    </h1>
+    <p class="mb-0 mt-2" style="color: #b0b8c4;">Gerencie suas solicitações de naves</p>
+</div>
 
-<h2>Seus Pedidos</h2>
-<table style="border-collapse: collapse; width: 100%;">
-    <thead>
-        <tr style="background-color: #f0f0f0;">
-            <th style="text-align: left; padding: 8px;">Nave</th>
-            <th style="text-align: left; padding: 8px;">Status</th>
-            <th style="text-align: left; padding: 8px;">Data Solicitação</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for pedido in pedidos %}
-        <tr>
-            <td style="border-bottom: 1px solid #ccc; padding: 8px;">
-                {{ pedido.nave.ship_name }}
-            </td>
-            <td style="border-bottom: 1px solid #ccc; padding: 8px; color: red;">
-                {{ pedido.status }}
-            </td>
-            <td style="border-bottom: 1px solid #ccc; padding: 8px;">
-                {{ pedido.data_solicitacao|date:"d/m/Y H:i" }}
-            </td>
-        </tr>
-    {% empty %}
-        <tr>
-            <td colspan="3" style="padding: 8px;">Você não possui pedidos.</td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
+<!-- Statistics Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-list-check fs-1 text-primary"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="card-subtitle mb-1 text-muted">Total de Pedidos</h6>
+                        <h2 class="card-title mb-0">{{ pedidos|length }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-clock-history fs-1 text-warning"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="card-subtitle mb-1 text-muted">Pendentes</h6>
+                        <h2 class="card-title mb-0">
+                            {% with pendentes=pedidos|length %}{{ pendentes }}{% endwith %}
+                        </h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-rocket-takeoff fs-1 text-info"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="card-subtitle mb-1 text-muted">Ação Rápida</h6>
+                        <a href="{% url 'solicitar_nave' %}" class="btn btn-sm btn-primary mt-1">
+                            <i class="bi bi-plus-circle me-1"></i>
+                            Nova Solicitação
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Orders Table -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">
+            <i class="bi bi-file-text me-2"></i>
+            Seus Pedidos
+        </h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th style="width: 50px;">#</th>
+                        <th>
+                            <i class="bi bi-rocket me-1"></i>
+                            Nave
+                        </th>
+                        <th>
+                            <i class="bi bi-info-circle me-1"></i>
+                            Status
+                        </th>
+                        <th>
+                            <i class="bi bi-calendar-event me-1"></i>
+                            Data Solicitação
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for pedido in pedidos %}
+                    <tr>
+                        <td class="text-muted">{{ forloop.counter }}</td>
+                        <td>
+                            <strong style="color: #00b4d8;">{{ pedido.nave.ship_name }}</strong>
+                            <br>
+                            <small class="text-muted">{{ pedido.nave.category.category_name }}</small>
+                        </td>
+                        <td>
+                            {% if pedido.status == "Pendente" %}
+                                <span class="badge bg-warning text-dark">
+                                    <i class="bi bi-clock-history me-1"></i>
+                                    {{ pedido.status }}
+                                </span>
+                            {% elif pedido.status == "Aprovado" %}
+                                <span class="badge bg-success">
+                                    <i class="bi bi-check-circle me-1"></i>
+                                    {{ pedido.status }}
+                                </span>
+                            {% elif pedido.status == "Rejeitado" %}
+                                <span class="badge bg-danger">
+                                    <i class="bi bi-x-circle me-1"></i>
+                                    {{ pedido.status }}
+                                </span>
+                            {% else %}
+                                <span class="badge bg-secondary">
+                                    {{ pedido.status }}
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <i class="bi bi-calendar3 me-1 text-muted"></i>
+                            {{ pedido.data_solicitacao|date:"d/m/Y" }}
+                            <br>
+                            <small class="text-muted">
+                                <i class="bi bi-clock me-1"></i>
+                                {{ pedido.data_solicitacao|date:"H:i" }}
+                            </small>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center py-5">
+                            <i class="bi bi-inbox fs-1 text-muted d-block mb-3"></i>
+                            <p class="text-muted mb-0">Você ainda não possui pedidos.</p>
+                            <a href="{% url 'solicitar_nave' %}" class="btn btn-primary mt-3">
+                                <i class="bi bi-plus-circle me-1"></i>
+                                Fazer Primeira Solicitação
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% if pedidos %}
+    <div class="card-footer text-muted">
+        <small>
+            <i class="bi bi-info-circle me-1"></i>
+            Total de {{ pedidos|length }} pedido{{ pedidos|length|pluralize }}
+        </small>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Quick Actions -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body text-center py-4">
+                <h5 class="mb-3">
+                    <i class="bi bi-lightning-charge me-2"></i>
+                    Ações Rápidas
+                </h5>
+                <a href="{% url 'solicitar_nave' %}" class="btn btn-primary me-2">
+                    <i class="bi bi-bag-plus me-1"></i>
+                    Solicitar Nova Nave
+                </a>
+                <a href="{% url 'perfil' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-person me-1"></i>
+                    Ver Perfil
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

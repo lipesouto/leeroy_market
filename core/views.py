@@ -106,11 +106,13 @@ def eve_callback(request):
 
     # 6. Login e redireciona
     login(request, user)
+    messages.success(request, f'Bem-vindo(a), {character_name}! Login realizado com sucesso.')
     return redirect('home_logada')
 
 
 from django.contrib.auth.decorators import login_required
 from .models import ShipCategory, Ship, Pedido
+from django.contrib import messages
 
 
 @login_required
@@ -120,6 +122,7 @@ def solicitar_nave(request):
         if ship_id:
             ship = Ship.objects.get(id=ship_id)
             pedido = Pedido.objects.create(usuario=request.user, nave=ship)
+            messages.success(request, f'Pedido de "{ship.ship_name}" criado com sucesso!')
 
             # 1) Verificar se existe eve_profile
             eve_profile = getattr(request.user, 'eve_profile', None)
@@ -171,11 +174,16 @@ def solicitar_nave(request):
 
                 if response.status_code == 201:
                     print("Mail enviado com sucesso!")
+                    messages.info(request, 'Notificação enviada por e-mail in-game!')
                 else:
                     print("Falha ao enviar mail:", response.status_code, response.text)
+                    messages.warning(request, 'Pedido criado, mas não foi possível enviar notificação por e-mail.')
 
             else:
                 print("Usuário não possui eve_profile. Não é possível enviar mail.")
+                messages.warning(request, 'Pedido criado, mas perfil EVE não encontrado.')
+        else:
+            messages.error(request, 'Por favor, selecione uma nave antes de solicitar.')
         return redirect('solicitar_nave')
 
     # GET

@@ -1,30 +1,259 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}EVE Site Logado{% endblock %}</title>
 
-     <!-- Link para a fonte Barlow (Google Fonts) -->
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <!-- Google Fonts - Barlow -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    <style>
+        body {
+            font-family: 'Barlow', sans-serif;
+            background: linear-gradient(135deg, #0c0f17 0%, #0e121a 50%, #131926 100%);
+            min-height: 100vh;
+            color: #e0e0e0;
+        }
+        
+        .sidebar {
+            background: linear-gradient(180deg, #1a1f2e 0%, #0f1419 100%);
+            min-height: 100vh;
+            padding: 0;
+            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .sidebar-header {
+            background: #00b4d8;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            border-bottom: 3px solid #0090ad;
+        }
+        
+        .sidebar-header h4 {
+            color: #fff;
+            margin: 0;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        
+        .nav-link {
+            color: #b0b8c4;
+            padding: 1rem 1.5rem;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .nav-link:hover {
+            background: rgba(0, 180, 216, 0.1);
+            color: #00b4d8;
+            border-left-color: #00b4d8;
+        }
+        
+        .nav-link.active {
+            background: rgba(0, 180, 216, 0.15);
+            color: #00b4d8;
+            border-left-color: #00b4d8;
+            font-weight: 600;
+        }
+        
+        .nav-link i {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+        
+        .main-content {
+            padding: 2rem;
+        }
+        
+        .page-header {
+            background: rgba(26, 31, 46, 0.6);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid #00b4d8;
+        }
+        
+        .page-header h1 {
+            color: #fff;
+            margin: 0;
+            font-weight: 700;
+            font-size: 1.8rem;
+        }
+        
+        .card {
+            background: rgba(26, 31, 46, 0.8);
+            border: 1px solid rgba(0, 180, 216, 0.2);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        
+        .card-header {
+            background: rgba(0, 180, 216, 0.1);
+            border-bottom: 1px solid rgba(0, 180, 216, 0.2);
+            color: #00b4d8;
+            font-weight: 600;
+        }
+        
+        .table {
+            color: #e0e0e0;
+        }
+        
+        .table thead th {
+            border-color: rgba(0, 180, 216, 0.3);
+            background: rgba(0, 180, 216, 0.1);
+            color: #00b4d8;
+            font-weight: 600;
+        }
+        
+        .table tbody td {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .table-hover tbody tr:hover {
+            background: rgba(0, 180, 216, 0.05);
+        }
+        
+        .btn-primary {
+            background: #00b4d8;
+            border-color: #00b4d8;
+            font-weight: 600;
+        }
+        
+        .btn-primary:hover {
+            background: #0090ad;
+            border-color: #0090ad;
+        }
+        
+        .badge {
+            font-weight: 600;
+            padding: 0.5rem 0.75rem;
+        }
+        
+        .user-info {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: #b0b8c4;
+        }
+        
+        .user-info strong {
+            color: #00b4d8;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                min-height: auto;
+            }
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
-<div class="container">
-        <nav>
-          <ul>
-              <li><a href="{% url 'home_logada' %}">Home</a></li>
-              <li><a href="{% url 'solicitar_nave' %}">Solicitar Nave</a></li>
-              <li><a href="{% url 'perfil' %}">Perfil</a></li>
-              <li><a href="{% url 'logout' %}">Logout</a></li>
-          </ul>
-        </nav>
-    <div class="content">
-        {% block main_content %}{% endblock main_content %}
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+                <div class="sidebar-header">
+                    <i class="bi bi-rocket-takeoff fs-2"></i>
+                    <h4>EVE Market</h4>
+                </div>
+                
+                {% if request.user.is_authenticated %}
+                <div class="user-info">
+                    <div class="d-flex align-items-center">
+                        {% if request.user.eve_profile and request.user.eve_profile.portrait_url %}
+                        <img src="{{ request.user.eve_profile.portrait_url }}" 
+                             alt="Avatar" 
+                             class="rounded-circle me-2" 
+                             style="width: 40px; height: 40px; border: 2px solid #00b4d8;">
+                        {% else %}
+                        <i class="bi bi-person-circle fs-2 me-2" style="color: #00b4d8;"></i>
+                        {% endif %}
+                        <div>
+                            <small class="d-block" style="font-size: 0.75rem; opacity: 0.7;">Bem-vindo</small>
+                            <strong style="font-size: 0.9rem;">
+                                {% if request.user.eve_profile %}
+                                    {{ request.user.eve_profile.character_name }}
+                                {% else %}
+                                    {{ request.user.username }}
+                                {% endif %}
+                            </strong>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'home_logada' %}active{% endif %}" 
+                               href="{% url 'home_logada' %}">
+                                <i class="bi bi-house-door"></i>
+                                <span>Home</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'solicitar_nave' %}active{% endif %}" 
+                               href="{% url 'solicitar_nave' %}">
+                                <i class="bi bi-bag-plus"></i>
+                                <span>Solicitar Nave</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'perfil' %}active{% endif %}" 
+                               href="{% url 'perfil' %}">
+                                <i class="bi bi-person"></i>
+                                <span>Perfil</span>
+                            </a>
+                        </li>
+                        <li class="nav-item mt-3">
+                            <a class="nav-link text-danger" href="{% url 'logout' %}">
+                                <i class="bi bi-box-arrow-right"></i>
+                                <span>Sair</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 main-content">
+                <!-- Messages -->
+                {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        <i class="bi bi-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-triangle{% else %}info-circle{% endif %} me-2"></i>
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+                
+                {% block main_content %}{% endblock main_content %}
+            </main>
+        </div>
     </div>
-</div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    {% block extra_js %}{% endblock %}
 </body>
 </html>
